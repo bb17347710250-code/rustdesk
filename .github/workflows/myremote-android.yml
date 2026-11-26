@@ -1,0 +1,22 @@
+name: MyRemote Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - "src/flutter_ffi.rs"
+      - "flutter/android/app/build.gradle"
+      - "flutter/android/app/src/main/AndroidManifest.xml"
+      - "flutter/android/app/src/main/res/values/strings.xml"
+      - "flutter/android/app/src/main/res/drawable/ic_myremote.xml"
+      - ".github/workflows/myremote-android.yml"
+
+jobs:
+  build-android:
+    uses: ./.github/workflows/flutter-build.yml
+    secrets: inherit
+    with:
+      upload-artifact: true
+      upload-tag: "myremote-v1.5.3"

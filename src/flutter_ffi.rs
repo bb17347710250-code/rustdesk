@@ -55,6 +55,28 @@ fn initialize(app_dir: &str, custom_client_config: &str) {
     } else {
         crate::read_custom_client(custom_client_config);
     }
+
+    // MyRemote Android branding and first-install server defaults.
+    // These are defaults only: existing user-saved settings are not overwritten.
+    #[cfg(target_os = "android")]
+    {
+        *config::APP_NAME.write().unwrap() = "MyRemote".to_owned();
+        let mut defaults = config::DEFAULT_SETTINGS.write().unwrap();
+        defaults.insert(
+            keys::OPTION_CUSTOM_RENDEZVOUS_SERVER.to_owned(),
+            "8.218.199.82".to_owned(),
+        );
+        defaults.insert(
+            keys::OPTION_KEY.to_owned(),
+            "TPCuafDR0lCcjqLzH+matNV1LW1Znva98MmcUbKAzIc=".to_owned(),
+        );
+        drop(defaults);
+
+        config::BUILTIN_SETTINGS
+            .write()
+            .unwrap()
+            .insert(keys::OPTION_HIDE_SERVER_SETTINGS.to_owned(), "Y".to_owned());
+    }
     #[cfg(target_os = "android")]
     {
         // flexi_logger can't work when android_logger initialized.
